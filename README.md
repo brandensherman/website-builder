@@ -1,5 +1,15 @@
 # Unison Frontend Engineer Mini-Project
 
+To run the development server: 
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
 ## Notes - Thought Process
 
 My intiial thought process was that when a user submits a json schema, I need to convert that string into a json object. I would need to check to see if the the current key is "element" or "children" and create a new element by looping through the object. If the children is an array of elements, then I would need to call the function recursively on each element of that array in order to create it.
