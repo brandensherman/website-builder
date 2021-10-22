@@ -3,13 +3,15 @@ import React, { useState } from 'react'
 export default function Home() {
   const [inputData, setInputData] = useState('')
   const [jsonData, setJsonData] = useState(null)
+  const [error, setError] = useState(false)
+  let keyCounter = 1
 
   function handleSubmit(e) {
     e.preventDefault()
     setJsonData(JSON.parse(inputData))
   }
 
-  function traverseObject(inputObject) {
+  function outputElement(inputObject) {
     let type = ''
     let props = null
     let children = null
@@ -17,40 +19,58 @@ export default function Home() {
 
     type = inputObject.element
 
-    // Traverse array if there is one and recursively call on traverseObject for each element
+    // If there is an array, loop through and recursively call on outputElement for each element
     if (Array.isArray(inputObject.children)) {
-      for (let item of inputObject.children) {
-        array.push(traverseObject(item))
+      for (let element of inputObject.children) {
+        array.push(outputElement(element))
       }
       children = array
     } else {
       children = inputObject.children
     }
 
+    // If there are any props, add them, and a key for each element
     if (inputObject.props) {
+      inputObject.props.key = keyCounter
+      keyCounter++
       props = inputObject.props
+    } else {
+      props = { key: keyCounter }
+      keyCounter++
     }
 
     // Create a new element using the data collected from the inputted json
-    let htmlElement = React.createElement(type, props, children)
+    const htmlElement = React.createElement(type, props, children)
 
     return htmlElement
   }
 
   return (
-    <div>
+    <div className='container'>
       <div>
-        <h1>Website Builder</h1>
-        <form onSubmit={handleSubmit}>
+        <h1 className='title'>Input JSON</h1>
+        <form className='form-container' onSubmit={handleSubmit}>
           <textarea
             cols='60'
             rows='20'
             onChange={(e) => setInputData(e.target.value)}
           ></textarea>
-          <button type='submit'>Submit</button>
+          <button className='btn' type='submit'>
+            Submit
+          </button>
         </form>
       </div>
-      {jsonData ? traverseObject(jsonData) : <div></div>}
+
+      <div>
+        <h1 className='title'>Output HTML</h1>
+        {jsonData ? (
+          outputElement(jsonData)
+        ) : (
+          <div>
+            <p>Please submit valid JSON with valid HTML elements</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
