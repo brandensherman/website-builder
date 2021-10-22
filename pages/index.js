@@ -11,29 +11,40 @@ export default function Home() {
     setJsonData(JSON.parse(inputData))
   }
 
-  function outputElement(inputObject) {
+  function createChildrenElements(children) {
+    let array = []
+    for (let element of children) {
+      array.push(outputElement(element))
+    }
+    return array
+  }
+
+  function outputElement(inputJSON) {
     let type = ''
     let props = null
     let children = null
-    let array = []
 
-    type = inputObject.element
-
-    // If there is an array, loop through and recursively call on outputElement for each element
-    if (Array.isArray(inputObject.children)) {
-      for (let element of inputObject.children) {
-        array.push(outputElement(element))
-      }
-      children = array
+    // Account for initially inputting an array of elements
+    if (Array.isArray(inputJSON)) {
+      type = 'div'
+      children = createChildrenElements(inputJSON)
     } else {
-      children = inputObject.children
+      // If initial input is an object
+      type = inputJSON.element
+
+      // If children is an array, loop through and recursively call on outputElement for each element
+      if (Array.isArray(inputJSON.children)) {
+        children = createChildrenElements(inputJSON.children)
+      } else {
+        children = inputJSON.children
+      }
     }
 
     // If there are any props, add them, and a key for each element
-    if (inputObject.props) {
-      inputObject.props.key = keyCounter
+    if (inputJSON.props) {
+      inputJSON.props.key = keyCounter
       keyCounter++
-      props = inputObject.props
+      props = inputJSON.props
     } else {
       props = { key: keyCounter }
       keyCounter++

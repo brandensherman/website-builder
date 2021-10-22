@@ -12,6 +12,7 @@ Constraints I noted:
 
 - It should make sure the html element provided is a valid element
 - The json itself must be valid (ex: no trailing commas on the last property of an object's scope)
+- It should account for the user initially inputting an array of objects
 
 To implement the drag and drop feature (with the code and direction I have gone in) I would probably need to convert the outputted html back into json, looping through the elements and identifying their properties, then running the outputElement function again once that state changes to reflect that change in the order of elements. If I were to plan it out more thoroughly from the start, and if this were a much larger application, then making each element a separate component from the start could be a direction explore.
 
